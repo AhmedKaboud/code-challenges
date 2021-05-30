@@ -1,6 +1,10 @@
 package com.intenthq.challenge;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class JNiceStrings {
   // From http://adventofcode.com/day/5
@@ -22,8 +26,44 @@ public class JNiceStrings {
   //    dvszwmarrgswjxmb is naughty because it contains only one vowel.
   //    How many strings are nice?
 
+  public static boolean isNice(String str) {
+    Set<Character> vowelsCharacters = new HashSet<>(Arrays.asList('a', 'e', 'i', 'o', 'u'));
+    Set<String> restrictedPairs = new HashSet<>(Arrays.asList("ab", "cd", "pq", "xy"));
+    boolean doubledCharacter = false;
+    int numberOfVowels = 0;
+
+    char previousCharacter = '\0';
+    for(char currentCharacter : str.toCharArray()) {
+      // Count the number of vowels
+      if(vowelsCharacters.contains(currentCharacter)) {
+        numberOfVowels++;
+      }
+
+      // Validate the doubled chars in row
+      if(previousCharacter == currentCharacter) {
+        doubledCharacter = true;
+      }
+
+      // Check the restricted the doubled char in row
+      if(restrictedPairs.contains("" + previousCharacter + currentCharacter)) {
+        return false;
+      }
+
+      previousCharacter = currentCharacter;
+    }
+
+    return doubledCharacter && numberOfVowels >= 3;
+  }
+
   public static int nice(List<String> xs) {
-    throw new RuntimeException("Not implemented");
+    int countOfNiceStrings = 0;
+    for(String str : xs) {
+      if(isNice(str)) {
+        countOfNiceStrings++;
+      }
+    }
+
+    return countOfNiceStrings;
   }
 
 }
